@@ -30,7 +30,7 @@ export default function HomePage() {
     setIsCreating(true);
     try {
       const roomId = await createRoom({
-        name: `Game ${new Date().toLocaleTimeString()}`,
+        name: `Mell.ro Planning Poker ${new Date().toLocaleDateString("pt-BR")}`,
         roomType: "canvas",
       });
 
@@ -185,11 +185,17 @@ export default function HomePage() {
                 <div className="h-2 w-2 rounded-full bg-green-400 animate-pulse" />
                 <span>100% Free Forever</span>
               </div>
-              <div className="flex items-center gap-2" data-testid="trust-no-account">
+              <div
+                className="flex items-center gap-2"
+                data-testid="trust-no-account"
+              >
                 <div className="h-2 w-2 rounded-full bg-green-400 animate-pulse" />
                 <span>No Account Required</span>
               </div>
-              <div className="flex items-center gap-2" data-testid="trust-realtime">
+              <div
+                className="flex items-center gap-2"
+                data-testid="trust-realtime"
+              >
                 <div className="h-2 w-2 rounded-full bg-green-400 animate-pulse" />
                 <span>Real-time Collaboration</span>
               </div>
