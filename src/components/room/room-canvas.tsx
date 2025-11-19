@@ -243,6 +243,114 @@ function RoomCanvasInner({
           size={1}
           className="[&>*]:stroke-gray-300 dark:[&>*]:stroke-gray-700"
         />
+
+        <div
+          style={{
+            position: "absolute",
+            bottom: 20,
+            left: 20,
+            width: 280,
+            padding: 12,
+            borderRadius: 12,
+            background: "#ffffffdd",
+            backdropFilter: "blur(6px)",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+            fontFamily: "Inter, sans-serif",
+            fontSize: 13,
+            lineHeight: "16px",
+            color: "#333",
+          }}
+        >
+          <div style={{ height: "100%", overflowY: "auto", paddingRight: 8 }}>
+            <div style={{ marginBottom: 8 }}>
+              <strong style={{ color: "#4d8fdaff" }}>1 – Muito baixo:</strong> ~
+              1h – 2h
+              <br />
+              Simples, baixo risco
+              <br />
+              Ex: Ajustar um texto ou botão
+            </div>
+
+            <div style={{ marginBottom: 8 }}>
+              <strong style={{ color: "#2f8bff" }}>2 – Baixo:</strong> ~ 2h – 4h
+              <br />
+              Pouca complexidade
+              <br />
+              Ex: Ajustar layout ou endpoint simples
+            </div>
+
+            <div style={{ marginBottom: 8 }}>
+              <strong style={{ color: "#124facff" }}>3 – Médio-baixo:</strong> ~
+              4h – 6h
+              <br />
+              Poucas dependências
+              <br />
+              Ex: Criar componente simples
+            </div>
+
+            <div style={{ marginBottom: 8 }}>
+              <strong style={{ color: "#0b8542ff" }}>5 – Médio:</strong> ~ 1 dia
+              <br />
+              Risco moderado
+              <br />
+              Ex: Criar API pequena ou refatoração de módulo
+            </div>
+
+            <div style={{ marginBottom: 8 }}>
+              <strong style={{ color: "#027030ff" }}>8 – Médio-alto:</strong> ~
+              1,5 – 2 dias
+              <br />
+              Mais dependências
+              <br />
+              Ex: Integração com outro sistema / tecnologia
+            </div>
+
+            <div style={{ marginBottom: 8 }}>
+              <strong style={{ color: "#c7a408ff" }}>13 – Alto:</strong> ~ 3 – 4
+              dias
+              <br />
+              Impacta mais áreas
+              <br />
+              Ex: Tela com lógica complexa
+            </div>
+
+            <div style={{ marginBottom: 8 }}>
+              <strong style={{ color: "#b98e00ff" }}>21 – Muito alto:</strong> ~
+              1 semana
+              <br />
+              Muitas dependências
+              <br />
+              Ex: Integração com múltiplos sistemas
+            </div>
+
+            <div style={{ marginBottom: 8 }}>
+              <strong style={{ color: "#ff8a33" }}>34 – Altíssimo:</strong> ~ 2
+              semanas
+              <br />
+              Risco elevado
+              <br />
+              Ex: Módulo novo ou arquitetura complexa
+            </div>
+
+            <div style={{ marginBottom: 8 }}>
+              <strong style={{ color: "#ff6d00" }}>55 – Grande demais:</strong>{" "}
+              ~ 3 – 4 semanas
+              <br />
+              Altíssima incerteza
+              <br />
+              Ex: Refatoração completa de plataforma
+            </div>
+
+            <div>
+              <strong style={{ color: "#e53935" }}>
+                89 – Quebra de épico:
+              </strong>{" "}
+              &gt; 1 mês
+              <br />
+              Dividir
+            </div>
+          </div>
+        </div>
       </ReactFlow>
     </div>
   );
