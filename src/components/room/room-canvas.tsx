@@ -260,7 +260,7 @@ function RoomCanvasInner({ roomData }: RoomCanvasProps): ReactElement {
             position: "absolute",
             bottom: 20,
             left: 20,
-            width: 280,
+            width: 320,
             padding: 12,
             borderRadius: 12,
             background: "#ffffffdd",
@@ -274,16 +274,18 @@ function RoomCanvasInner({ roomData }: RoomCanvasProps): ReactElement {
         >
           <div style={{ height: "100%", overflowY: "auto", paddingRight: 8 }}>
             <div style={{ marginBottom: 8 }}>
-              <strong style={{ color: "#4d8fdaff" }}>1 - Simples:</strong> &lt;{" "}
-              1 dia
+              <strong style={{ color: "#4d8fdaff" }}>1 - Simples</strong>
               <br />
-              Ex: Ajuste pequeno de layout ou regra de negócio
+              &lt; 1 dia
+              <br />
+              Ex: Ajuste de layout ou regra de negócio
             </div>
 
             <div style={{ marginBottom: 8 }}>
               <strong style={{ color: "#124facff" }}>
-                3 – Pouca complexidade:
-              </strong>{" "}
+                3 – Pouca complexidade
+              </strong>
+              <br />
               ~ 1 – 2 dias
               <br />
               Ex: Inclusão de novos campos em formulário
@@ -291,8 +293,9 @@ function RoomCanvasInner({ roomData }: RoomCanvasProps): ReactElement {
 
             <div style={{ marginBottom: 8 }}>
               <strong style={{ color: "#0b8542ff" }}>
-                5 – Levemente complexo:
-              </strong>{" "}
+                5 – Levemente complexo
+              </strong>
+              <br />
               ~ 2 - 4 dias
               <br />
               Ex: Alterar fluxo com novas validações
@@ -300,8 +303,9 @@ function RoomCanvasInner({ roomData }: RoomCanvasProps): ReactElement {
 
             <div style={{ marginBottom: 8 }}>
               <strong style={{ color: "#027030ff" }}>
-                8 – Complexidade média:
-              </strong>{" "}
+                8 – Complexidade média
+              </strong>
+              <br />
               ~ 4 – 6 dias
               <br />
               Ex: Novas telas com novos componentes e/ou regras de negócio
@@ -309,22 +313,24 @@ function RoomCanvasInner({ roomData }: RoomCanvasProps): ReactElement {
 
             <div style={{ marginBottom: 8 }}>
               <strong style={{ color: "#c7a408ff" }}>
-                13 – Complexo e/ou extenso:
-              </strong>{" "}
+                13 – Complexo e/ou extenso
+              </strong>
+              <br />
               ~ 6 – 8 dias
               <br />
-              Ex: Impacto em diversas telas, fluxos, microserviços e regras de
-              negócio críticas
+              Ex: Impacto em diversos fluxos, microserviços e regras de negócio
+              críticas
             </div>
 
             <div style={{ marginBottom: 8 }}>
               <strong style={{ color: "#ff8a33" }}>
-                21 – Extremamente complexo e/ou extenso:
-              </strong>{" "}
+                21 – Extremamente complexo e/ou extenso
+              </strong>
+              <br />
               ~ 8 - 10 dias
               <br />
-              Ex: Módulo inteiramente novo, múltiplas integrações, dependências
-              externas e incertezas
+              Ex: Módulo novo, múltiplas integrações, dependências externas e
+              incertezas
             </div>
           </div>
         </div>

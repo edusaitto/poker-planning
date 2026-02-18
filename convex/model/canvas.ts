@@ -10,7 +10,7 @@ const PLAYERS_Y = 200;
 const PLAYER_SPACING = 200;
 const VOTING_CARD_Y = 450;
 const VOTING_CARD_SPACING = 70;
-const DEFAULT_CARDS = ["1", "2", "3", "5", "8", "13", "21", "34", "55", "89"];
+const DEFAULT_CARDS = ["1", "3", "5", "8", "13", "21"];
 
 export interface Position {
   x: number;
@@ -33,7 +33,7 @@ export interface CanvasNode {
  */
 export async function initializeCanvasNodes(
   ctx: MutationCtx,
-  args: { roomId: Id<"rooms"> }
+  args: { roomId: Id<"rooms"> },
 ): Promise<void> {
   const room = await ctx.db.get(args.roomId);
   if (!room || room.roomType !== "canvas") {
@@ -86,7 +86,7 @@ export async function initializeCanvasNodes(
  */
 export async function getCanvasNodes(
   ctx: QueryCtx,
-  roomId: Id<"rooms">
+  roomId: Id<"rooms">,
 ): Promise<CanvasNode[]> {
   return await ctx.db
     .query("canvasNodes")
@@ -104,12 +104,12 @@ export async function updateNodePosition(
     nodeId: string;
     position: Position;
     userId: Id<"users">;
-  }
+  },
 ): Promise<void> {
   const node = await ctx.db
     .query("canvasNodes")
     .withIndex("by_room_node", (q) =>
-      q.eq("roomId", args.roomId).eq("nodeId", args.nodeId)
+      q.eq("roomId", args.roomId).eq("nodeId", args.nodeId),
     )
     .unique();
 
@@ -137,14 +137,14 @@ export async function upsertPlayerNode(
     roomId: Id<"rooms">;
     userId: Id<"users">;
     position?: Position;
-  }
+  },
 ): Promise<Id<"canvasNodes">> {
   const nodeId = `player-${args.userId}`;
 
   const existingNode = await ctx.db
     .query("canvasNodes")
     .withIndex("by_room_node", (q) =>
-      q.eq("roomId", args.roomId).eq("nodeId", nodeId)
+      q.eq("roomId", args.roomId).eq("nodeId", nodeId),
     )
     .unique();
 
@@ -182,7 +182,7 @@ export async function upsertPlayerNode(
  */
 export async function createVotingCardNodes(
   ctx: MutationCtx,
-  args: { roomId: Id<"rooms">; userId: Id<"users"> }
+  args: { roomId: Id<"rooms">; userId: Id<"users"> },
 ): Promise<void> {
   const now = Date.now();
   const cardCount = DEFAULT_CARDS.length;
@@ -219,7 +219,7 @@ export async function createVotingCardNodes(
         },
         lastUpdatedAt: now,
       });
-    })
+    }),
   );
 }
 
@@ -228,14 +228,14 @@ export async function createVotingCardNodes(
  */
 export async function upsertResultsNode(
   ctx: MutationCtx,
-  args: { roomId: Id<"rooms"> }
+  args: { roomId: Id<"rooms"> },
 ): Promise<Id<"canvasNodes">> {
   const nodeId = "results";
 
   const existingNode = await ctx.db
     .query("canvasNodes")
     .withIndex("by_room_node", (q) =>
-      q.eq("roomId", args.roomId).eq("nodeId", nodeId)
+      q.eq("roomId", args.roomId).eq("nodeId", nodeId),
     )
     .unique();
 
@@ -258,7 +258,7 @@ export async function upsertResultsNode(
  */
 export async function removePlayerNodeAndCards(
   ctx: MutationCtx,
-  args: { roomId: Id<"rooms">; userId: Id<"users"> }
+  args: { roomId: Id<"rooms">; userId: Id<"users"> },
 ): Promise<void> {
   const nodeId = `player-${args.userId}`;
 
@@ -271,9 +271,9 @@ export async function removePlayerNodeAndCards(
         q.eq(q.field("nodeId"), nodeId),
         q.and(
           q.eq(q.field("type"), "votingCard"),
-          q.eq(q.field("data.userId"), args.userId)
-        )
-      )
+          q.eq(q.field("data.userId"), args.userId),
+        ),
+      ),
     )
     .collect();
 
@@ -290,12 +290,12 @@ export async function toggleNodeLock(
     roomId: Id<"rooms">;
     nodeId: string;
     locked: boolean;
-  }
+  },
 ): Promise<void> {
   const node = await ctx.db
     .query("canvasNodes")
     .withIndex("by_room_node", (q) =>
-      q.eq("roomId", args.roomId).eq("nodeId", args.nodeId)
+      q.eq("roomId", args.roomId).eq("nodeId", args.nodeId),
     )
     .unique();
 
@@ -318,12 +318,12 @@ export async function updateViewport(
     roomId: Id<"rooms">;
     userId: Id<"users">;
     viewport: { x: number; y: number; zoom: number };
-  }
+  },
 ): Promise<void> {
   const existing = await ctx.db
     .query("canvasState")
     .withIndex("by_room_user", (q) =>
-      q.eq("roomId", args.roomId).eq("userId", args.userId)
+      q.eq("roomId", args.roomId).eq("userId", args.userId),
     )
     .unique();
 
@@ -352,12 +352,12 @@ export async function updatePresence(
     userId: Id<"users">;
     cursor?: Position;
     isActive?: boolean;
-  }
+  },
 ): Promise<void> {
   const existing = await ctx.db
     .query("presence")
     .withIndex("by_room_user", (q) =>
-      q.eq("roomId", args.roomId).eq("userId", args.userId)
+      q.eq("roomId", args.roomId).eq("userId", args.userId),
     )
     .unique();
 
@@ -385,12 +385,12 @@ export async function updatePresence(
  */
 export async function markUserInactive(
   ctx: MutationCtx,
-  args: { roomId: Id<"rooms">; userId: Id<"users"> }
+  args: { roomId: Id<"rooms">; userId: Id<"users"> },
 ): Promise<void> {
   const presence = await ctx.db
     .query("presence")
     .withIndex("by_room_user", (q) =>
-      q.eq("roomId", args.roomId).eq("userId", args.userId)
+      q.eq("roomId", args.roomId).eq("userId", args.userId),
     )
     .unique();
 
@@ -416,7 +416,7 @@ export async function cleanupInactivePresence(ctx: MutationCtx): Promise<void> {
   // Update all inactive presence records in parallel
   await Promise.all(
     inactivePresence.map((presence) =>
-      ctx.db.patch(presence._id, { isActive: false })
-    )
+      ctx.db.patch(presence._id, { isActive: false }),
+    ),
   );
 }
