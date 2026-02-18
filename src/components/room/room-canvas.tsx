@@ -48,9 +48,7 @@ const nodeTypes: NodeTypes = {
   timer: TimerNode,
 } as const;
 
-function RoomCanvasInner({
-  roomData,
-}: RoomCanvasProps): ReactElement {
+function RoomCanvasInner({ roomData }: RoomCanvasProps): ReactElement {
   const { user } = useAuth();
   const [nodes, setNodes, onNodesChange] = useNodesState<CustomNodeType>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
@@ -88,9 +86,11 @@ function RoomCanvasInner({
   // Reset selected card when game is reset
   useEffect(() => {
     if (!roomData || !user) return;
-    
-    const userVote = roomData.votes.find((v: SanitizedVote) => v.userId === user.id);
-    
+
+    const userVote = roomData.votes.find(
+      (v: SanitizedVote) => v.userId === user.id,
+    );
+
     // If no card is picked on server (game was reset), clear local selection
     if (!userVote || !userVote.hasVoted) {
       setSelectedCardValue(null);
@@ -102,23 +102,26 @@ function RoomCanvasInner({
   }, [user, roomData]);
 
   // Handle card selection
-  const handleCardSelect = useCallback(async (cardValue: string) => {
-    if (!user || !roomData) return;
-    
-    setSelectedCardValue(cardValue);
-    
-    try {
-      await pickCard({
-        roomId: roomData.room._id,
-        userId: user.id,
-        cardLabel: cardValue,
-        cardValue: parseInt(cardValue) || 0,
-      });
-    } catch (error) {
-      console.error("Failed to pick card:", error);
-      setSelectedCardValue(null);
-    }
-  }, [pickCard, user, roomData]);
+  const handleCardSelect = useCallback(
+    async (cardValue: string) => {
+      if (!user || !roomData) return;
+
+      setSelectedCardValue(cardValue);
+
+      try {
+        await pickCard({
+          roomId: roomData.room._id,
+          userId: user.id,
+          cardLabel: cardValue,
+          cardValue: parseInt(cardValue) || 0,
+        });
+      } catch (error) {
+        console.error("Failed to pick card:", error);
+        setSelectedCardValue(null);
+      }
+    },
+    [pickCard, user, roomData],
+  );
 
   // Get room ID
   const roomId = roomData?.room._id as Id<"rooms">;
@@ -145,19 +148,20 @@ function RoomCanvasInner({
 
   // Debounced position update to prevent database overload
   const debouncedPositionUpdate = useMemo(
-    () => debounce((nodeId: string, position: { x: number; y: number }) => {
-      if (!user || !roomId) return;
-      
-      updateNodePosition({
-        roomId,
-        nodeId,
-        position,
-        userId: user.id,
-      }).catch((error) => {
-        console.error("Failed to update node position:", error);
-      });
-    }, 100),
-    [roomId, user, updateNodePosition]
+    () =>
+      debounce((nodeId: string, position: { x: number; y: number }) => {
+        if (!user || !roomId) return;
+
+        updateNodePosition({
+          roomId,
+          nodeId,
+          position,
+          userId: user.id,
+        }).catch((error) => {
+          console.error("Failed to update node position:", error);
+        });
+      }, 100),
+    [roomId, user, updateNodePosition],
   );
 
   // Cleanup debounced function on unmount
@@ -168,17 +172,20 @@ function RoomCanvasInner({
   }, [debouncedPositionUpdate]);
 
   // Handle node position changes
-  const handleNodesChange = useCallback((changes: NodeChange<CustomNodeType>[]) => {
-    // Call the original handler to update local state
-    onNodesChange(changes);
-    
-    // Send position updates to database
-    changes.forEach((change) => {
-      if (change.type === 'position' && change.position && !change.dragging) {
-        debouncedPositionUpdate(change.id, change.position);
-      }
-    });
-  }, [onNodesChange, debouncedPositionUpdate]);
+  const handleNodesChange = useCallback(
+    (changes: NodeChange<CustomNodeType>[]) => {
+      // Call the original handler to update local state
+      onNodesChange(changes);
+
+      // Send position updates to database
+      changes.forEach((change) => {
+        if (change.type === "position" && change.position && !change.dragging) {
+          debouncedPositionUpdate(change.id, change.position);
+        }
+      });
+    },
+    [onNodesChange, debouncedPositionUpdate],
+  );
 
   // Handle connection between nodes - prevent manual connections
   const onConnect = useCallback(() => {
@@ -189,7 +196,7 @@ function RoomCanvasInner({
   // Fit view when users change with debounce
   useEffect(() => {
     if (!roomData?.users) return;
-    
+
     const timeoutId = setTimeout(() => {
       fitView({
         padding: 0.1,
@@ -203,7 +210,11 @@ function RoomCanvasInner({
   }, [roomData?.users, fitView]);
 
   if (!roomData || !user) {
-    return <div className="flex items-center justify-center h-screen">Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        Loading...
+      </div>
+    );
   }
 
   return (
@@ -263,91 +274,57 @@ function RoomCanvasInner({
         >
           <div style={{ height: "100%", overflowY: "auto", paddingRight: 8 }}>
             <div style={{ marginBottom: 8 }}>
-              <strong style={{ color: "#4d8fdaff" }}>1 – Muito baixo:</strong> ~
-              1h – 2h
+              <strong style={{ color: "#4d8fdaff" }}>1 - Simples:</strong> &lt;{" "}
+              1 dia
               <br />
-              Simples, baixo risco
-              <br />
-              Ex: Ajustar um texto ou botão
+              Ex: Ajuste pequeno de layout ou regra de negócio
             </div>
 
             <div style={{ marginBottom: 8 }}>
-              <strong style={{ color: "#2f8bff" }}>2 – Baixo:</strong> ~ 2h – 4h
-              <br />
-              Pouca complexidade
-              <br />
-              Ex: Ajustar layout ou endpoint simples
-            </div>
-
-            <div style={{ marginBottom: 8 }}>
-              <strong style={{ color: "#124facff" }}>3 – Médio-baixo:</strong> ~
-              4h – 6h
-              <br />
-              Poucas dependências
-              <br />
-              Ex: Criar componente simples
-            </div>
-
-            <div style={{ marginBottom: 8 }}>
-              <strong style={{ color: "#0b8542ff" }}>5 – Médio:</strong> ~ 1 dia
-              <br />
-              Risco moderado
-              <br />
-              Ex: Criar API pequena ou refatoração de módulo
-            </div>
-
-            <div style={{ marginBottom: 8 }}>
-              <strong style={{ color: "#027030ff" }}>8 – Médio-alto:</strong> ~
-              1,5 – 2 dias
-              <br />
-              Mais dependências
-              <br />
-              Ex: Integração com outro sistema / tecnologia
-            </div>
-
-            <div style={{ marginBottom: 8 }}>
-              <strong style={{ color: "#c7a408ff" }}>13 – Alto:</strong> ~ 3 – 4
-              dias
-              <br />
-              Impacta mais áreas
-              <br />
-              Ex: Tela com lógica complexa
-            </div>
-
-            <div style={{ marginBottom: 8 }}>
-              <strong style={{ color: "#b98e00ff" }}>21 – Muito alto:</strong> ~
-              1 semana
-              <br />
-              Muitas dependências
-              <br />
-              Ex: Integração com múltiplos sistemas
-            </div>
-
-            <div style={{ marginBottom: 8 }}>
-              <strong style={{ color: "#ff8a33" }}>34 – Altíssimo:</strong> ~ 2
-              semanas
-              <br />
-              Risco elevado
-              <br />
-              Ex: Módulo novo ou arquitetura complexa
-            </div>
-
-            <div style={{ marginBottom: 8 }}>
-              <strong style={{ color: "#ff6d00" }}>55 – Grande demais:</strong>{" "}
-              ~ 3 – 4 semanas
-              <br />
-              Altíssima incerteza
-              <br />
-              Ex: Refatoração completa de plataforma
-            </div>
-
-            <div>
-              <strong style={{ color: "#e53935" }}>
-                89 – Quebra de épico:
+              <strong style={{ color: "#124facff" }}>
+                3 – Pouca complexidade:
               </strong>{" "}
-              &gt; 1 mês
+              ~ 1 – 2 dias
               <br />
-              Dividir
+              Ex: Inclusão de novos campos em formulário
+            </div>
+
+            <div style={{ marginBottom: 8 }}>
+              <strong style={{ color: "#0b8542ff" }}>
+                5 – Levemente complexo:
+              </strong>{" "}
+              ~ 2 - 4 dias
+              <br />
+              Ex: Alterar fluxo com novas validações
+            </div>
+
+            <div style={{ marginBottom: 8 }}>
+              <strong style={{ color: "#027030ff" }}>
+                8 – Complexidade média:
+              </strong>{" "}
+              ~ 4 – 6 dias
+              <br />
+              Ex: Novas telas com novos componentes e/ou regras de negócio
+            </div>
+
+            <div style={{ marginBottom: 8 }}>
+              <strong style={{ color: "#c7a408ff" }}>
+                13 – Complexo e/ou extenso:
+              </strong>{" "}
+              ~ 6 – 8 dias
+              <br />
+              Ex: Impacto em diversas telas, fluxos, microserviços e regras de
+              negócio críticas
+            </div>
+
+            <div style={{ marginBottom: 8 }}>
+              <strong style={{ color: "#ff8a33" }}>
+                21 – Extremamente complexo e/ou extenso:
+              </strong>{" "}
+              ~ 8 - 10 dias
+              <br />
+              Ex: Módulo inteiramente novo, múltiplas integrações, dependências
+              externas e incertezas
             </div>
           </div>
         </div>
