@@ -10,7 +10,7 @@ const PLAYERS_Y = 200;
 const PLAYER_SPACING = 200;
 const VOTING_CARD_Y = 450;
 const VOTING_CARD_SPACING = 70;
-const DEFAULT_CARDS = ["1", "3", "5", "8", "13", "21"];
+const DEFAULT_CARDS = ["1", "2", "3", "5", "8", "13", "21"];
 
 export interface Position {
   x: number;
