@@ -274,7 +274,19 @@ function RoomCanvasInner({ roomData }: RoomCanvasProps): ReactElement {
         >
           <div style={{ height: "100%", overflowY: "auto", paddingRight: 8 }}>
             <div style={{ marginBottom: 8 }}>
-              <strong style={{ color: "#4d8fdaff" }}>1 - Simples</strong>
+              <strong style={{ color: "#4d8fdaff" }}>
+                1 - Extremamente simples
+              </strong>
+              <br />
+              ~ Poucas horas
+              <br />
+              Ex: Troca de texto ou cor de botão
+            </div>
+
+            <div style={{ marginBottom: 8 }}>
+              <strong style={{ color: "rgb(47, 113, 189)" }}>
+                2 - Simples
+              </strong>
               <br />
               &lt; 1 dia
               <br />
